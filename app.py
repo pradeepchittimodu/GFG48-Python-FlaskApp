@@ -1,17 +1,14 @@
 from flask import Flask
-
+from flask import request
+from flask import render_template
 def create_app():
     app = Flask(__name__)
     print("inside create_app function")
+    
     @app.route('/')
     def home():
         print("inside home function")
-        return 'Hi hi 26-09-2026abcd12345 gbbvdfjv kv vvbvvu vv vuvbrbrv rv rur vr vrv rbh v rv rbvjjv v bru vv rv vbrv rv r'
-
-
-
-
-
+        return render_template('home.html')
     return app
 
 
