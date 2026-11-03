@@ -1,5 +1,4 @@
 from flask import Flask
-from flask import request
 from flask import render_template
 
 
@@ -12,6 +11,7 @@ def create_app():
         print("inside home function")
         return render_template('home.html')
     return app
+
 
 if __name__ == '__main__':
     app = create_app()
