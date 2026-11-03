@@ -1,18 +1,25 @@
-pipeline { // pipeline - deployment-pipeline
-    agent { label 'python-worker'} // agent where pipeline will be executed
+pipeline {
+    agent { label  'low-capacity' }
 
-    stages { // collection of jobs
-        stage('Deploy the application') { // job 1
-            steps { // the series of command , which will be executed in this job
-               sh 'systemctl start docker'
-               sh 'docker pull jinny1/gfg48-python-flaskapp:latest'
-               sh 'docker rm -f webserver'
-               sh 'docker run -dit --name webserver -p 80:80 jinny1/gfg48-python-flaskapp:latest'
+    stages {
+        stage('Clone Git Repo') { // job 1
+            steps {
+                git branch: 'main', url: 'https://github.com/pradeepchittimodu/GFG48-Python-FlaskApp.git'
             }
         }
-        stage('Deployment Completed Message') { // job 2
-            steps { // the series of command , which will be executed in this job
-              echo "Deployment Completed Successfully"
+        stage('Install packages & unit test & Lint check') {
+            steps {
+                sh 'yum install python3-pip -y'
+                sh 'pip3 install -r requirements.txt'
+                sh 'pytest'
+                sh 'flake8'
+            }
+        }
+        stage('build docker image and run container') {
+            steps {
+                sh '''docker build -t webapp .
+                      docker rm -f $(docker ps -aq)
+                      docker run -dit -p 80:80 --name web webapp'''
             }
         }
     }
