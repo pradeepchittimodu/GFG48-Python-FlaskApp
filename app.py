@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 
+
 def create_app():
     app = Flask(__name__)
     print("inside create_app function")
